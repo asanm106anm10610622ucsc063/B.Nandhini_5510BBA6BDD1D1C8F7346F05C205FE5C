@@ -1,0 +1,35 @@
+# Step 1: Install and Load Required Libraries
+install.packages("ggplot2") # For visualization
+install.packages("factoextra") # For evaluating K
+library(ggplot2)
+library(factoextra)
+# Step 2: Load the Dataset
+data <- read.csv("customers.csv")
+# View the first few rows
+head(data)
+# Step 3: Select Relevant Features for Clustering
+customer_data <- data[, c("Annual_Income", "Spending_Score")]
+# Step 4: Determine the Optimal K using Elbow Method
+fviz_nbclust(customer_data, kmeans, method = "wss") +
+ggtitle("Elbow Method for Optimal K")
+# Step 5: Apply K-Means Clustering (Choosing K=5)
+set.seed(123)
+k_value <- 5
+kmeans_result <- kmeans(customer_data, centers = k_value, nstart = 25)
+# Step 6: Assign Clusters to Data
+customer_data$Cluster <- as.factor(kmeans_result$cluster)
+# Step 7: Visualize the Clusters
+ggplot(customer_data, aes(x = Annual_Income, y = Spending_Score, color = Cluster)) +
+geom_point(size = 3) +
+geom_point(data = as.data.frame(kmeans_result$centers), aes(x = Annual_Income, y =
+Spending_Score), color = "red", size = 5, shape = 8) +
+ggtitle("K-Means Clustering of Customers") +
+xlab("Annual Income") +
+ylab("Spending Score") +
+theme_minimal()
+# Step 8: Print Cluster Centers
+print("Cluster Centers:")
+print(kmeans_result$centers)
+# Step 9: Print Cluster Assignments
+print("Cluster Assignments:")
+print(kmeans_result$cluster)
