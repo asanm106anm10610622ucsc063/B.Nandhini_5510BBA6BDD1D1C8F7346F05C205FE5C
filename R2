@@ -1,0 +1,70 @@
+# 1. Creating Lists
+list_example <- list(
+numbers = c(1, 2, 3, 4), # Numeric vector
+words = c("apple", "banana", "cherry"), # Character vector
+logicals = c(TRUE, FALSE, TRUE) # Logical vector
+)
+print("Original List:")
+print(list_example)
+# 2. Accessing List Elements
+# By index
+print("Access by index (first element):")
+print(list_example[[1]])
+# By name
+print("Access by name (words):")
+print(list_example$words)
+# Access specific element in a component
+print("Access specific value in words (second element):")
+print(list_example$words[2])
+# 3. Modifying List Elements
+list_example$numbers <- c(10, 20, 30) # Replace the numeric vector
+print("Modified List (numbers replaced):")
+print(list_example)
+# Adding new components
+list_example$new_component <- "Hello, R!" # Add a new component
+print("List after adding a new component:")
+print(list_example)
+# 4. Removing List Elements
+list_example$new_component <- NULL # Remove the new component
+print("List after removing the new component:")
+print(list_example)
+# 5. Combining Lists
+list_combined <- c(list_example, list(additional = c(100, 200)))
+print("Combined List:")
+print(list_combined)
+# 6. Applying Functions on Lists
+# Using lapply to apply a function to each element
+print("Length of each component in the list:")
+print(lapply(list_example, length))
+# Using sapply to simplify the result
+print("Length of each component (simplified):")
+print(sapply(list_example, length))
+# 7. Nested Lists
+nested_list <- list(
+first = list(a = 1, b = 2),
+second = list(c = "hello", d = "world")
+)
+print("Nested List:")
+print(nested_list)
+# Accessing elements in nested lists
+print("Access nested element (second$c):")
+print(nested_list$second$c)
+# 8. Unlisting
+flat_vector <- unlist(list_example$numbers)
+print("Unlisted numeric vector:")
+print(flat_vector)
+# 9. Checking and Iterating Over a List
+print("Checking structure of the list:")
+str(list_example)
+print("Iterating over the list:")
+for (item in list_example) {
+print(item)
+}
+# 10. Use Cases
+# Extracting specific components
+selected_components <- list_example[c("numbers", "words")]
+print("Selected components (numbers and words):")
+print(selected_components)
+# Summary of the numbers in the list
+print("Summary of the numbers component:")
+print(summary(list_example$numbers))
