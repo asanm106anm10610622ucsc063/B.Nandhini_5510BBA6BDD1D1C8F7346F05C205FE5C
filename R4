@@ -1,0 +1,55 @@
+# Step 1: Load or Create a Dataset
+students <- data.frame(
+StudentID = 1:10,
+Marks = c(78, 85, 62, 90, 88, 75, 80, 68, 95, 84),
+Age = c(20, 21, 20, 22, 21, 20, 22, 19, 23, 21)
+)
+print("Dataset:")
+print(students)
+# Step 2: Compute Descriptive Statistics
+# Mean of Marks and Age
+mean_marks <- mean(students$Marks)
+mean_age <- mean(students$Age)
+print(paste("Mean Marks:", mean_marks))
+print(paste("Mean Age:", mean_age))
+# Median of Marks and Age
+median_marks <- median(students$Marks)
+median_age <- median(students$Age)
+print(paste("Median Marks:", median_marks))
+print(paste("Median Age:", median_age))
+# Mode Function
+get_mode <- function(x) {
+uniq_vals <- unique(x)
+uniq_vals[which.max(tabulate(match(x, uniq_vals)))]
+}
+# Mode of Marks and Age
+mode_marks <- get_mode(students$Marks)
+mode_age <- get_mode(students$Age)
+print(paste("Mode Marks:", mode_marks))
+print(paste("Mode Age:", mode_age))
+# Variance of Marks
+variance_marks <- var(students$Marks)
+print(paste("Variance of Marks:", variance_marks))
+# Standard Deviation of Marks
+std_dev_marks <- sd(students$Marks)
+print(paste("Standard Deviation of Marks:", std_dev_marks))
+# Step 3: Summary Statistics
+summary_stats <- summary(students)
+print("Summary Statistics:")
+print(summary_stats)
+# Step 4: Visualization
+# Histogram for Marks
+hist(
+students$Marks,
+main = "Histogram of Marks",
+xlab = "Marks",
+col = "lightblue",
+border = "black"
+)
+# Boxplot for Marks
+boxplot(
+students$Marks,
+main = "Boxplot of Marks",
+ylab = "Marks",
+col = "lightgreen"
+)
