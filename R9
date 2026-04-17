@@ -1,0 +1,55 @@
+# Step 1: Install and Load Required Libraries
+install.packages("cluster") # For K-Medoids (PAM algorithm)
+install.packages("ggplot2") # For visualization
+install.packages("factoextra") # For plotting clusters
+library(cluster)
+library(ggplot2)
+library(factoextra)
+# Step 2: Load the Iris Dataset
+data <- iris # Load dataset
+head(data) # View first few rows
+# Step 3: Select Features for Clustering (Petal Length & Petal Width for better separation)
+iris_data <- data[, c("Petal.Length", "Petal.Width")]
+# Step 4: Visualize the Raw Data (Before Clustering)
+ggplot(iris_data, aes(x = Petal.Length, y = Petal.Width)) +
+ geom_point(color = "blue", size = 3) +
+ ggtitle("Before Clustering: Raw Data") +
+xlab("Petal Length") +
+ylab("Petal Width") +
+ theme_minimal()
+# Step 5: Apply K-Medoids Clustering using K = 3
+k <- 3 # Fixed K
+kmedoids_result <- pam(iris_data, k = k)
+# Step 6: Assign Cluster Labels Based on Species
+# Mapping clusters to actual species
+cluster_labels <- c("Setosa", "Versicolor", "Virginica")
+# Assign human-readable labels
+iris_data$Cluster <- factor(kmedoids_result$cluster, labels = cluster_labels)
+# Step 7: Visualize the Clusters (After Clustering)
+ggplot(iris_data, aes(x = Petal.Length, y = Petal.Width, color = Cluster)) +
+ geom_point(size = 3) +
+ 
+geom_point(data = as.data.frame(kmedoids_result$medoids), aes(x = Petal.Length, y =
+Petal.Width), color = "red", size = 5, shape = 8) +
+ ggtitle(paste("After Clustering: K-Medoids (K =", k, ")")) +
+ xlab("Petal Length") +
+ ylab("Petal Width") +
+ theme_minimal()
+# Step 8: Compare Clusters with Actual Species
+iris_data$Actual_Species <- data$Species # Add actual species for comparison
+confusion_matrix
+<-
+table(Predicted_Cluster
+=
+iris_data$Cluster,
+Actual_Species
+=
+iris_data$Actual_Species)
+print("Comparison of Predicted Clusters with Actual Species:")
+print(confusion_matrix)
+# Step 9: Print Medoids (Cluster Centers)
+print("Medoid Centers:")
+print(kmedoids_result$medoids)
+# Step 10: Print Cluster Assignments with Labels
+print("Cluster Assignments:")
+print(iris_data[, c("Petal.Length", "Petal.Width", "Cluster")]) # Show actual cluster labels
