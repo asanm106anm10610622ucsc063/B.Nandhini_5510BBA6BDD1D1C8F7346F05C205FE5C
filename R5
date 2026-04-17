@@ -1,0 +1,24 @@
+# Step 1: Install and Load Required Libraries
+if (!require("arules")) install.packages("arules", dependencies=TRUE)
+if (!require("arulesViz")) install.packages("arulesViz", dependencies=TRUE)
+library(arules)
+library(arulesViz)
+# Step 2: Load the Dataset
+data("Groceries") # Load built-in transactional dataset
+# Step 3: Inspect the Dataset
+summary(Groceries) # Check dataset summary
+inspect(Groceries[1:5]) # View first 5 transactions
+# Step 4: Generate Association Rules using Apriori Algorithm
+rules <- apriori(Groceries,
+ parameter = list(supp = 0.01, conf = 0.2, minlen = 2))
+# Step 5: Display Summary of Rules
+summary(rules)
+# Step 6: View the Top 5 Strongest Rules Sorted by Lift
+inspect(sort(rules, by="lift")[1:5])
+# Step 7: Visualization of Rules
+plot(rules, method = "scatterplot", measure = c("support", "confidence"), shading = "lift")
+plot(rules, method = "graph", control = list(type = "items"))
+# Step 8: Experiment with Different Support and Confidence Thresholds
+rules_high_conf <- apriori(Groceries,
+ parameter = list(supp = 0.02, conf = 0.5, minlen = 2))
+inspect(sort(rules_high_conf, by="lift")[1:5])
