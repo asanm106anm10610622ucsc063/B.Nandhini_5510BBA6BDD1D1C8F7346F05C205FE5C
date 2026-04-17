@@ -1,0 +1,69 @@
+# Step 1: Install and Load Required Libraries
+install.packages("cluster") # For K-Medoids (PAM algorithm)
+install.packages("ggplot2") # For visualization
+install.packages("factoextra") # For optimal K selection & silhouette analysis
+install.packages("cluster") # For Gap Statistic Method
+library(cluster)
+library(ggplot2)
+library(factoextra)
+# Step 2: Load the Iris Dataset
+data <- iris # Load dataset
+head(data) # View first few rows
+# Step 3: Select Features for Clustering (Petal Length & Petal Width for better separation)
+iris_data <- data[, c("Petal.Length", "Petal.Width")]
+# Step 4: Visualize the Raw Data (Before Clustering)
+ggplot(iris_data, aes(x = Petal.Length, y = Petal.Width)) +
+geom_point(color = "blue", size = 3) +
+ggtitle("Before Clustering: Raw Data") +
+xlab("Petal Length") +
+ylab("Petal Width") +
+theme_minimal()
+# Step 5: Determine the Optimal K using Gap Statistic Method
+set.seed(123)
+gap_stat <- clusGap(iris_data, FUN = pam, K.max = 10, B = 50)
+fviz_gap_stat(gap_stat) # Visualization of Gap Statistic results
+# Extract the best K (should be 3 for Iris dataset)
+optimal_k <- maxSE(gap_stat$Tab[, "gap"], gap_stat$Tab[, "SE.sim"])
+print(paste("Optimal K found by Gap Statistic Method:", optimal_k))
+# Step 6: Apply K-Medoids Clustering using the detected K
+kmedoids_result <- pam(iris_data, k = optimal_k)
+# Step 7: Assign Cluster Labels Based on Species
+# Mapping clusters to actual species
+cluster_labels <- c("Setosa", "Versicolor", "Virginica")
+# Assign human-readable labels
+iris_data$Cluster <- factor(kmedoids_result$cluster, labels = cluster_labels)
+# Step 8: Compute Silhouette Scores for Validation
+silhouette_scores <- silhouette(kmedoids_result$clustering, dist(iris_data[, 1:2]))
+# Step 9: Visualize Silhouette Scores for Each Cluster
+fviz_silhouette(silhouette_scores) +
+ggtitle("Silhouette Scores for K-Medoids Clusters")
+# Step 10: Visualize the Clusters (After Clustering)
+ggplot(iris_data, aes(x = Petal.Length, y = Petal.Width, color = Cluster)) +
+geom_point(size = 3) +
+geom_point(data = as.data.frame(kmedoids_result$medoids), aes(x = Petal.Length, y =
+Petal.Width), color = "red", size = 5, shape = 8) +
+ggtitle(paste("After Clustering: K-Medoids (K =", optimal_k, ")")) +
+xlab("Petal Length") +
+ylab("Petal Width") +
+theme_minimal()
+# Step 11: Compare Clusters with Actual Species
+iris_data$Actual_Species <- data$Species # Add actual species for comparison
+confusion_matrix
+<-
+table(Predicted_Cluster
+=
+iris_data$Cluster,
+Actual_Species
+=
+iris_data$Actual_Species)
+print("Comparison of Predicted Clusters with Actual Species:")
+print(confusion_matrix)
+# Step 12: Print Medoids (Cluster Centers)
+print("Medoid Centers:")
+print(kmedoids_result$medoids)
+# Step 13: Print Cluster Assignments with Labels
+print("Cluster Assignments:")
+print(iris_data[, c("Petal.Length", "Petal.Width", "Cluster")]) # Show actual cluster labels
+# Step 14: Compute Average Silhouette Score
+avg_silhouette <- mean(silhouette_scores[, "sil_width"])
+print(paste("Average Silhouette Score:", round(avg_silhouette, 3)))
